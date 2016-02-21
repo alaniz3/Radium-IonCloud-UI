@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row" style="margin-top:2%">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="color: #fff">
+				<h3 class="panel-title">Information</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row" style="margin-top:2%">
+		        <div class="col-lg-3 col-md-6">
+		          <div class="panel panel-primary" style="margin-bottom:15px">
+		            <div class="panel-heading">
+		              <div class="row text-center">
+		                <div class="huge">Blank</div>
+		                <div>Connection Status</div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+
+		        <div class="col-lg-3 col-md-6">
+		          <div class="panel panel-primary" style="margin-bottom:15px">
+		            <div class="panel-heading">
+		              <div class="row text-center">
+		                <div class="huge">Blank</div>
+		                <div>Connected Nodes</div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+
+		        <div class="col-lg-3 col-md-6">
+		          <div class="panel panel-primary" style="margin-bottom:15px">
+		            <div class="panel-heading">
+		              <div class="row text-center">
+		                <div class="huge">Blank</div>
+		                <div>Block Height</div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+
+		        <div class="col-lg-3 col-md-6">
+		          <div class="panel panel-primary" style="margin-bottom:15px">
+		            <div class="panel-heading">
+		              <div class="row text-center">
+		                <div class="huge">Blank</div>
+		                <div>Radium Price</div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+			</div><!--end of row-->
+
+			</div>
+		</div>
+	</div>
+</div><!--end of row-->	
+
+<div class="row" style="margin-top:2%">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="color: #fff">
+				<h3 class="panel-title">Search Document</h3>
+			</div>
+			<div class="panel-body">
+				<form type="get" action="." style="margin: 0">
+					<div class="input-group">
+   					<input  id="search_id" type="text" class="form-control" name="search_id"  placeholder="Enter document ID" >
+   					<span class="input-group-btn">
+    				<button id="search_submit" type="submit" class="btn btn-default" >Submit</button>
+    				</span>
+    				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div><!--end of row-->	
+
+<div class="row" style="margin-top:2%">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="color: #fff">
+				<h3 class="panel-title">Upload Document</h3>
+			</div>
+			<div class="panel-body">
+				<form type="get" action="." style="margin: 0">
+					<div class="input-group">
+   					<input  id="upload_query" type="text" class="form-control" name="upload_query"  placeholder="Enter text message" >
+   					<span class="input-group-btn">
+    				<button id="upload_submit" type="submit" class="btn btn-default" >Submit</button>
+    				</span>
+    				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div><!--end of row-->	
+
+
+<div class="row" style="margin-top:2%">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="color: #fff">
+				<h3 class="panel-title">Recent Documents</h3>
+			</div>
+			<div class="panel-body">
+				{% if latest_docs %}
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Document ID</th>
+								<th>Document Content</th>
+								<th>Timestamp</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for doc in latest_docs %}
+							<tr>
+								<td><a href="/{{ doc.id }}/">{{ doc.id }}</a></td>
+								<td>{{ doc.content }}</td>
+								<td>{{ doc.timestamp }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{% else %}
+				<p><b>No recent documents are available.</b></p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div><!--end of row-->	
+{% endblock content %}
