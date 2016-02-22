@@ -8,3 +8,6 @@ class Document(models.Model):
 
 	def __str__(self):
 		return self.content
+
+class FileUpload(models.Model):
+	docfile = models.FileField(upload_to='')
