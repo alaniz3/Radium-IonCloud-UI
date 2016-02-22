@@ -1,6 +1,6 @@
 {% load staticfiles %}
 .scrollable-content {
-	background: url("background.jpg");
+	background: url("../images/background.jpg");
 	background-color: #fff;
 }
 
