@@ -9,8 +9,6 @@ from .models import Document
 
 from django.conf import settings
 
-
-
 def index(request):
 	latest_docs = Document.objects.order_by('-timestamp')[:10]
 	form = UploadForm()
