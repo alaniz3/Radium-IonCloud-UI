@@ -127,3 +127,8 @@ ALLOWED_UPLOAD_FORMATS = ["txt"]
 
 # Max upload file size
 UPLOAD_SIZE_LIMIT = 10485760
+
+# RPC Settings for connection to wallet
+RPC_USER = "user"
+RPC_PASS = "password"
+RPC_PORT = 27914

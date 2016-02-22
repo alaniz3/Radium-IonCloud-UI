@@ -6,15 +6,18 @@ from django.core.exceptions import ValidationError
 from .forms import UploadForm
 from .models import FileUpload
 from .models import Document
+from .stats import Stats
 
 from django.conf import settings
 
 def index(request):
 	latest_docs = Document.objects.order_by('-timestamp')[:10]
 	form = UploadForm()
+	stats = Stats().stats
 	context = {
 		'latest_docs' : latest_docs,
-		'form' : form
+		'form' : form,
+		'stats': stats
 	}
 	if request.method == 'GET':
 		search_query = request.GET.get('search_id', None)
@@ -32,9 +35,9 @@ def index(request):
 
 	if request.method == 'POST':
 		if request.FILES['docfile'].__str__().split(".")[1] not in settings.ALLOWED_UPLOAD_FORMATS:
-			raise ValueError('This format is not allowed.')
+			raise ValidationError('This format is not allowed.')
 		if request.FILES['docfile'].size > settings.UPLOAD_SIZE_LIMIT:
-			raise ValueError("The size of your upload is too large.")
+			raise ValidationError("The size of your upload is too large.")
 
 		form = UploadForm(request.POST, request.FILES)
 		if form.is_valid():
