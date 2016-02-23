@@ -9,3 +9,9 @@
   background: -webkit-linear-gradient(top, #8b008b, #592e8a 100%);
   color: #fff;
 }
+
+.btn-colors {
+  background: -moz-linear-gradient(top, #8b008b, #592e8a 100%);
+  background: -webkit-linear-gradient(top, #8b008b, #592e8a 100%);
+  color: #fff;
+}
