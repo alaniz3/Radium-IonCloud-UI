@@ -16,7 +16,7 @@ class Stats():
 			self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (settings.RPC_USER, settings.RPC_PASS, settings.RPC_PORT))
 			self.sync()
 		except socket_error as e:
-			self.stats = {'price': None, 'connections': None, 'connected': None, 'height': None}
+			self.stats = {'price': None, 'connections': None, 'connected': False, 'height': None}
 
 
 	def getinfo(self):
