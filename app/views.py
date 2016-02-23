@@ -23,10 +23,10 @@ def index(request):
 
 		if search_query:
 			try:
-				doc = Document.objects.get(identifier = doc_id)
+				doc = Document.objects.get(identifier = search_query)
 			except Document.DoesNotExist:
 				try:
-					doc = FileUpload.objects.get(identifier = doc_id)
+					doc = FileUpload.objects.get(identifier = search_query)
 				except FileUpload.DoesNotExist:
 					raise Http404("Document does not exist.")
 			context = {
