@@ -1,10 +1,11 @@
 {% load staticfiles %}
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-base.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-desktop.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-hover.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+	<title>Radium Ion Cloud</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-base.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-desktop.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/mobile-angular-ui-hover.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 </head>
 
 <div class="scrollable">
@@ -14,6 +15,8 @@
 		  <div class="list-group-item list-group-item-home">
 		    <p><img align="middle" src="{% static 'images/logo.png' %}" /></p>
 		    <h1 class='text-center'>Radium Ion Cloud</h1><br>
+		    <p align="left"><button onclick="location.href = '/';" id="home_redirect" class="btn btn-default" >Home</button> <button onclick="location.href = '/settings';" id="settings_redirect" class="btn btn-default" >Settings</button></p>
+
 		  </div>
 		</div>
 <body>

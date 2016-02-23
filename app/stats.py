@@ -1,5 +1,6 @@
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 import logging, time, pickle, urllib2, json
+from socket import error as socket_error
 
 from django.conf import settings
 
@@ -11,8 +12,12 @@ if debug:
 
 class Stats():
 	def __init__(self):
-		self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (settings.RPC_USER, settings.RPC_PASS, settings.RPC_PORT))
-		self.sync()
+		try:
+			self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (settings.RPC_USER, settings.RPC_PASS, settings.RPC_PORT))
+			self.sync()
+		except socket_error as e:
+			self.stats = {'price': None, 'connections': None, 'connected': None, 'height': None}
+
 
 	def getinfo(self):
 		return self.rpc.getinfo()

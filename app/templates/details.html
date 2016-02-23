@@ -6,12 +6,12 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading" style="color: #fff">
-				<h3 class="panel-title">Document {{ text.id }}</h3>
+				<h3 class="panel-title">Document {{ doc.identifier }}</h3>
 			</div>
 			<div class="panel-body">
-				<div class="row"> Document ID: {{ doc.id }}</div>
-				<div class="row"> Content: {{ doc.content }}</div>
-				<div class="row"> Timestamp: {{ doc.timestamp }}</div>			
+				<div class="row"><p style="margin-left:1%"> Document ID: {{ doc.identifier }}</p></div>
+				<div class="row"><p style="margin-left:1%"> Content: {{ doc.content }}</p></div>
+				<div class="row"><p style="margin-left:1%"> Timestamp: {{ doc.timestamp }}</p></div>			
 				
 			</div>
 		</div>

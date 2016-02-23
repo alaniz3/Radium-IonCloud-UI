@@ -123,7 +123,7 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = './files'
 
 # Formats allowed for upload
-ALLOWED_UPLOAD_FORMATS = ["txt"]
+ALLOWED_UPLOAD_FORMATS = ["txt", 'ppt', 'pptx', 'xls', 'xlsx', 'doc', 'docx', 'pdf']
 
 # Max upload file size
 UPLOAD_SIZE_LIMIT = 10485760

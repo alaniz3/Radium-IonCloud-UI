@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -10,26 +10,32 @@ from .stats import Stats
 
 from django.conf import settings
 
+from itertools import chain
+from operator import attrgetter
+import string
+import random
+
 def index(request):
-	latest_docs = Document.objects.order_by('-timestamp')[:10]
-	form = UploadForm()
-	stats = Stats().stats
-	context = {
-		'latest_docs' : latest_docs,
-		'form' : form,
-		'stats': stats
-	}
+	context = {}
 	if request.method == 'GET':
 		search_query = request.GET.get('search_id', None)
 		upload_query = request.GET.get('upload_query', None)
+
 		if search_query:
-			doc = get_object_or_404(Document, pk=search_query)
+			try:
+				doc = Document.objects.get(identifier = doc_id)
+			except Document.DoesNotExist:
+				try:
+					doc = FileUpload.objects.get(identifier = doc_id)
+				except FileUpload.DoesNotExist:
+					raise Http404("Document does not exist.")
 			context = {
 				'doc': doc
 			}
 			return render(request, 'details.html', context)
+
 		if upload_query:
-			new_doc = Document(content=upload_query, timestamp=timezone.now())
+			new_doc = Document(content=upload_query, timestamp=timezone.now(), identifier=''.join(random.SystemRandom().choice(string.digits) for _ in range(10)))
 			new_doc.save()
 			return HttpResponseRedirect('/')
 
@@ -41,15 +47,32 @@ def index(request):
 
 		form = UploadForm(request.POST, request.FILES)
 		if form.is_valid():
-			new_doc = FileUpload(docfile=request.FILES['docfile'])
+			context['upload'] = 'Upload Successful'
+			new_doc = FileUpload(docfile=request.FILES['docfile'], timestamp=timezone.now(), content=request.FILES['docfile'].name, identifier=''.join(random.SystemRandom().choice(string.digits) for _ in range(10)))
 			new_doc.save()
-			return HttpResponseRedirect('/')
+			#return HttpResponseRedirect('/')
+
+	context['latest_docs'] = sorted(chain(Document.objects.all(), FileUpload.objects.all()), key = attrgetter('timestamp'), reverse=True)[:10]
+	context['form'] = UploadForm()
+	context['stats'] = Stats().stats
 
 	return render(request, 'index.html', context)
 
 def details(request, doc_id):
-	doc = get_object_or_404(Document, pk=doc_id)
+	try:
+		print "hello"
+		doc = Document.objects.get(identifier = doc_id)
+		print doc
+	except Document.DoesNotExist:
+		try:
+			doc = FileUpload.objects.get(identifier = doc_id)
+		except FileUpload.DoesNotExist:
+			raise Http404("Document does not exist.")
 	context = {
 		'doc': doc
 	}
 	return render(request, 'details.html', context)
+
+def configuration(request):
+	context = {}
+	return render(request, 'settings.html', context)
