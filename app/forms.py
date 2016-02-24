@@ -10,4 +10,4 @@ class SettingsForm(forms.Form):
 	rpc_user = forms.CharField(label='RPC Username', max_length=100)
 	rpc_pass = forms.CharField(label='RPC Password', max_length=100)
 	rpc_port = forms.CharField(label='RPC Port', max_length=10)
-	masternode_ip = forms.CharField(label='Master node IP', max_length=100, required=False)
+	masternode_ip = forms.CharField(label='Master Node IP', max_length=100, required=False)

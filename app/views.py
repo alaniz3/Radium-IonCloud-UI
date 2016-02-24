@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from django.core.files import File
 
 from .forms import UploadForm
 from .forms import SettingsForm
@@ -84,8 +83,6 @@ def details(request, doc_id):
 		this_file = doc.docfile.file
 	except IOError as e:
 		raise Http404("Document does not exist.")
-	print type(this_file)
-	print this_file
 	context = {
 		'doc': doc,
 		'file_path': this_file.__str__().split('/')[-1]
@@ -98,7 +95,6 @@ def configuration(request):
 		if form.is_valid():
 			global config
 			config = form.cleaned_data
-			print config 
 			return HttpResponseRedirect('/')
 	else:
 		form = SettingsForm()
