@@ -9,7 +9,11 @@
 				<h3 class="panel-title">Settings</h3>
 			</div>
 			<div class="panel-body">
-							
+				<form action="." method="post">
+					{% csrf_token %}
+    				{{ form.as_p }}
+    				<input class="btn btn-default btn-colors" type="submit" value="Submit"/>
+    			</form>
 			</div>
 		</div>
 	</div>

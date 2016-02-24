@@ -2,8 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.core.files import File
 
 from .forms import UploadForm
+from .forms import SettingsForm
 from .models import FileUpload
 from .models import Document
 from .stats import Stats
@@ -16,6 +18,17 @@ import string
 import random
 
 def index(request):
+	if 'config' in locals() or 'config' in globals():
+		print "hey"
+		RPC_USER = config['rpc_user'] 
+		RPC_PASS = config['rpc_pass']
+		RPC_PORT = int(config['rpc_port'])
+	else:
+		print "hey 2"
+		RPC_USER = settings.RPC_USER 
+		RPC_PASS = settings.RPC_PASS
+		RPC_PORT = settings.RPC_PORT
+
 	context = {}
 	if request.method == 'GET':
 		search_query = request.GET.get('search_id', None)
@@ -54,13 +67,12 @@ def index(request):
 
 	context['latest_docs'] = sorted(chain(Document.objects.all(), FileUpload.objects.all()), key = attrgetter('timestamp'), reverse=True)[:10]
 	context['form'] = UploadForm()
-	context['stats'] = Stats().stats
+	context['stats'] = Stats(RPC_USER,RPC_PASS, RPC_PORT).stats
 
 	return render(request, 'index.html', context)
 
 def details(request, doc_id):
 	try:
-		print "hello"
 		doc = Document.objects.get(identifier = doc_id)
 		print doc
 	except Document.DoesNotExist:
@@ -68,11 +80,27 @@ def details(request, doc_id):
 			doc = FileUpload.objects.get(identifier = doc_id)
 		except FileUpload.DoesNotExist:
 			raise Http404("Document does not exist.")
+	try:
+		this_file = doc.docfile.file
+	except IOError as e:
+		raise Http404("Document does not exist.")
+	print type(this_file)
+	print this_file
 	context = {
-		'doc': doc
+		'doc': doc,
+		'file_path': this_file.__str__().split('/')[-1]
 	}
 	return render(request, 'details.html', context)
 
 def configuration(request):
-	context = {}
+	if request.method == 'POST':
+		form = SettingsForm(request.POST)
+		if form.is_valid():
+			global config
+			config = form.cleaned_data
+			print config 
+			return HttpResponseRedirect('/')
+	else:
+		form = SettingsForm()
+	context = {'form': form}
 	return render(request, 'settings.html', context)

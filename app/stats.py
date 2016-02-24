@@ -11,9 +11,9 @@ if debug:
     logging.getLogger("BitcoinRPC").setLevel(logging.DEBUG)
 
 class Stats():
-	def __init__(self):
+	def __init__(self, rpc_user, rpc_pass, rpc_port):
 		try:
-			self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (settings.RPC_USER, settings.RPC_PASS, settings.RPC_PORT))
+			self.rpc = AuthServiceProxy(("http://%s:%s@127.0.0.1:%s/") % (rpc_user, rpc_pass, rpc_port))
 			self.sync()
 		except socket_error as e:
 			self.stats = {'price': None, 'connections': None, 'connected': False, 'height': None}
