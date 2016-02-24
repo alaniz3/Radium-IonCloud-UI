@@ -18,12 +18,10 @@ import random
 
 def index(request):
 	if 'config' in locals() or 'config' in globals():
-		print "hey"
 		RPC_USER = config['rpc_user'] 
 		RPC_PASS = config['rpc_pass']
 		RPC_PORT = int(config['rpc_port'])
 	else:
-		print "hey 2"
 		RPC_USER = settings.RPC_USER 
 		RPC_PASS = settings.RPC_PASS
 		RPC_PORT = settings.RPC_PORT
@@ -73,20 +71,23 @@ def index(request):
 def details(request, doc_id):
 	try:
 		doc = Document.objects.get(identifier = doc_id)
-		print doc
+		context = 	context = {
+		'doc': doc
+	}
 	except Document.DoesNotExist:
 		try:
 			doc = FileUpload.objects.get(identifier = doc_id)
+			try:
+				this_file = doc.docfile.file
+				context = {
+					'doc': doc,
+					'file_path': this_file.__str__().split('/')[-1]
+				}
+			except IOError as e:
+				raise Http404("Document does not exist.")
 		except FileUpload.DoesNotExist:
 			raise Http404("Document does not exist.")
-	try:
-		this_file = doc.docfile.file
-	except IOError as e:
-		raise Http404("Document does not exist.")
-	context = {
-		'doc': doc,
-		'file_path': this_file.__str__().split('/')[-1]
-	}
+
 	return render(request, 'details.html', context)
 
 def configuration(request):

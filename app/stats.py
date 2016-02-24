@@ -18,10 +18,6 @@ class Stats():
 		except socket_error as e:
 			self.stats = {'price': None, 'connections': None, 'connected': False, 'height': None}
 
-
-	def getinfo(self):
-		return self.rpc.getinfo()
-
 	def getPrice(self):
 		req = urllib2.Request('https://poloniex.com/public?command=returnTicker', headers={'User-Agent':'Magic Browser'})
 		con = urllib2.urlopen(req)
@@ -29,7 +25,7 @@ class Stats():
 		return jsonreq['BTC_RADS']['last']
 
 	def sync(self):
-		getinfo = self.getinfo()
+		getinfo = self.rpc.getinfo()
 		try: 
 			conns = getinfo['connections']
 			height = "{:,}".format(getinfo['blocks'])
