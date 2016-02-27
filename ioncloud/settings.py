@@ -134,3 +134,7 @@ UPLOAD_SIZE_LIMIT = 10485760
 RPC_USER = "user"
 RPC_PASS = "password"
 RPC_PORT = 27914
+
+# Default client login details
+CLIENT_USER = "user"
+CLIENT_PASS = "password"

@@ -10,11 +10,7 @@
 			</div>
 			<div class="panel-body">
 				<div class="row"><p style="margin-left:1%"> Document ID: {{ doc.identifier }}</p></div>
-				{% if file_path %}
-				<div class="row"><p style="margin-left:1%"> Content: <a href="{{MEDIA_URL}}{{file_path}}">{{ doc.content }}</a></p></div>
-				{% else %}
-				<div class="row"><p style="margin-left:1%"> Content: {{ doc.content }}</p></div>
-				{% endif %}
+				<div class="row"><p style="margin-left:1%"> Name: <a href="{{MEDIA_URL}}{{file_path}}">{{ doc.content }}</a></p></div>
 				<div class="row"><p style="margin-left:1%"> Timestamp: {{ doc.timestamp }}</p></div>			
 				
 			</div>
