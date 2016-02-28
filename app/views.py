@@ -3,31 +3,36 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
+from django.conf import settings
+
 from .forms import UploadForm
 from .forms import SettingsForm
 from .models import FileUpload
+
 from .stats import Stats
+from smartchain.ioncloud_client import Client
 
-from django.conf import settings
 
-import string
-import random
+import string, random, time
 
 def index(request):
 	if 'config' in locals() or 'config' in globals():
 		RPC_USER = config['rpc_user'] 
 		RPC_PASS = config['rpc_pass']
 		RPC_PORT = int(config['rpc_port'])
-		CLIENT_USER = config['client_user']
+		CLIENT_PIN = int(config['client_pin'])
 		CLIENT_PASS = config['client_pass']
 	else:
 		RPC_USER = settings.RPC_USER 
 		RPC_PASS = settings.RPC_PASS
 		RPC_PORT = settings.RPC_PORT
-		CLIENT_USER = settings.CLIENT_USER
+		CLIENT_PIN = settings.CLIENT_PIN
 		CLIENT_PASS = settings.CLIENT_PASS
-
+	
+	client = Client()
+	client.authenticateAs(CLIENT_PASS, CLIENT_PIN)
 	context = {}
+	
 	if request.method == 'GET':
 		search_query = request.GET.get('search_id', None)
 
@@ -52,6 +57,8 @@ def index(request):
 			context['upload'] = 'Upload Successful'
 			new_doc = FileUpload(docfile=request.FILES['docfile'], timestamp=timezone.now(), content=request.FILES['docfile'].name, identifier=''.join(random.SystemRandom().choice(string.digits) for _ in range(10)))
 			new_doc.save()
+			
+			client.uploadFile('./files/' + request.FILES['docfile'].name)
 			#return HttpResponseRedirect('/')
 
 	context['latest_docs'] = FileUpload.objects.order_by('-timestamp')[:10]
@@ -61,16 +68,29 @@ def index(request):
 	return render(request, 'index.html', context)
 
 def details(request, doc_id):
+	if 'config' in locals() or 'config' in globals():
+		CLIENT_PIN = int(config['client_pin'])
+		CLIENT_PASS = config['client_pass']
+	else:
+		CLIENT_PIN = settings.CLIENT_PIN
+		CLIENT_PASS = settings.CLIENT_PASS
+	client = Client()
+	client.authenticateAs(CLIENT_PASS, CLIENT_PIN)
 	try:
 		doc = FileUpload.objects.get(identifier = doc_id)
 		try:
-			this_file = doc.docfile.file
 			context = {
 				'doc': doc,
-				'file_path': this_file.__str__().split('/')[-1]
+				'file_path': doc.docfile.file.name.split('/')[-1]
 			}
 		except IOError as e:
-			raise Http404("Document does not exist.")
+			# If file not stored locally then search on the Ion Cloud
+			client.requestFileContents(doc.docfile.name.split('/')[-1], './files/' + doc.docfile.name.split('/')[-1])
+			context = {
+				'doc': doc,
+				'file_path': doc.docfile.file.name.split('/')[-1]
+			}
+			return render(request, 'details.html', context)
 	except FileUpload.DoesNotExist:
 		raise Http404("Document does not exist.")
 

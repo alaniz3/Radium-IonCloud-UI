@@ -136,5 +136,5 @@ RPC_PASS = "password"
 RPC_PORT = 27914
 
 # Default client login details
-CLIENT_USER = "user"
+CLIENT_PIN = 1111
 CLIENT_PASS = "password"
